@@ -41,6 +41,8 @@
 #include <sstream>
 #include <std_srvs/Empty.h>
 
+#include <dnb_msgs/ComponentStatus.h>
+
 namespace usb_cam {
 
 class UsbCamNode
@@ -52,6 +54,8 @@ public:
   // shared image message
   sensor_msgs::Image img_;
   image_transport::CameraPublisher image_pub_;
+
+  ros::Publisher componentStatusPublisher; // drag&bot status publisher
 
   // parameters
   std::string video_device_name_, io_method_name_, pixel_format_name_, camera_name_, camera_info_url_;
@@ -84,6 +88,9 @@ public:
   UsbCamNode() :
       node_("~")
   {
+
+    componentStatusPublisher = node_.advertise<dnb_msgs::ComponentStatus>("/usb_cam/status", 5, true); // DNB component status publisher
+
     // advertise the main image topic
     image_transport::ImageTransport it(node_);
     image_pub_ = it.advertiseCamera("image_raw", 1);
@@ -250,6 +257,12 @@ public:
       if (cam_.is_capturing()) {
         if (!take_and_send_image()) ROS_WARN("USB camera did not respond in time.");
       }
+
+      dnb_msgs::ComponentStatus cm_status;
+      cm_status.status_id = dnb_msgs::ComponentStatus::RUNNING;
+      cm_status.status_msg = "running";
+      componentStatusPublisher.publish(cm_status);
+
       ros::spinOnce();
       loop_rate.sleep();
 

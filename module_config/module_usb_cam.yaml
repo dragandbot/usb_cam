@@ -1,0 +1,28 @@
+package: usb_cam
+name: 'Generic USB camera'
+description: 'This is the generic usb camera'
+type: driver/camera/generic
+roslaunch: usb_cam-test.launch
+configuration:
+  - id: video_device
+    namespace: ''
+    name: 'Video device'
+    description: 'Video device linux name in /dev'
+    datatype: string
+    default: '/dev/video0'
+  - id: image_width
+    namespace: ''
+    name: 'Width'
+    description: 'Width in pixel'
+    datatype: int
+    default: '640'
+  - id: image_height
+    namespace: ''
+    name: 'Height'
+    description: 'Height in pixel'
+    datatype: int
+    default: '480'
+nodes:
+  - node_callerid: /usb_cam
+    type: usb_cam_node.cpp
+status_topic: /usb_cam/status
