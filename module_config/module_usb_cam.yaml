@@ -22,6 +22,12 @@ configuration:
     description: 'Height in pixel'
     datatype: int
     default: '480'
+  - id: intrinsic_calibration_name
+    namespace: ''
+    name: 'Intrinsic calibration name'
+    description: 'Intrinsic calibration file used by the camera for rectification'
+    datatype: string
+    default: 'intrinsic_usbcam'
 nodes:
   - node_callerid: /usb_cam
     type: usb_cam_node.cpp
